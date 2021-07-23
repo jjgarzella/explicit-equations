@@ -1,0 +1,3 @@
+[submodule "EasyPolynomialStorage"]
+	path = EasyPolynomialStorage
+	url = https://github.com/jjgarzella/EasyPolynomialStorage

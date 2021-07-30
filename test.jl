@@ -6,6 +6,31 @@ using Nemo
 using Singular
 using GroebnerBasis
 
+
+function solvegroebnerp(I,p,var)
+  G = gens(I)
+  sol = zeros(1:length(var))
+  for i = 1:length(var) # maybe just up to length(var)
+    duminput = zeros(Int,length(var))
+    Gvars = vars(G[i])
+    indices = Int[]
+
+    for j = 1:length(Gvars)
+    push!(indices,findfirst(isequal(Gvars[j]),var))
+    end
+
+    for k = 1:p
+      duminput[indices[i]] = k
+      if Singular.evaluate(G[i],duminput)== 0
+        sol[indices[i]] = mod(k,5)
+      else
+        nothing
+    end
+  end
+end
+sol
+end#solvegroeber
+
 # evaluate function for an ideal
 function evaluate(I::Oscar.MPolyIdeal, v)
     R = base_ring(I)

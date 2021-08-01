@@ -6,6 +6,10 @@ using Nemo
 using Singular
 using GroebnerBasis
 
+function convertgfptofloat(gfp)
+  parse(Float64,string(gfg))
+end
+
 
 function solvegroebnerp(I,p,var)
   G = gens(I)

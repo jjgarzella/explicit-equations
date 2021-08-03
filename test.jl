@@ -6,6 +6,14 @@ using Nemo
 using Singular
 using GroebnerBasis
 
+function run()
+  @polyvar x[1:3]
+
+  f = [x[1]^2-x[2]^2,3x[1]^2-x[2]^5,2x[1]+9x[2]]
+
+  @time HomotopyContinuation.solve(f)
+end
+
 function convertgfptofloat(gfp)
   parse(Float64,string(gfg))
 end

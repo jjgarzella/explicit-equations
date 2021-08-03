@@ -122,7 +122,7 @@ end
 
 
 function convertgfptofloat(gfp)
-  parse(Float64,string(gfp))
+  parse(Int64,string(gfp))
 end
 
 function convertarraygfptofloat(array)
@@ -152,6 +152,8 @@ function pseudo_inv_finite_field(M,p)
   # M similarly to F[1 2; 2 4] by setting F = GF(p) for p prime.
   # Needs HomotopyContinuation to run.
   pseudoinv = round.(pseudoinv)
+
+  pseudoinv = convert(Array{Int},pseudoinv)
   return pseudoinv
 end
 

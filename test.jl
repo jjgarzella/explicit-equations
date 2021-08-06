@@ -11,7 +11,7 @@ function run()
 
   f = [x[1]^2-x[2]^2,3x[1]^2-x[2]^5,2x[1]+9x[2]]
 
-  @time HomotopyContinuation.solve(f)
+  @time HomotopyContinuation.solve(f;threading = true)
 end
 
 function convertgfptofloat(gfp)

@@ -202,8 +202,31 @@ function extend_mod(sol,f,var,m,p)
   # which does satisfy f mod 3^(10)
 end
 
-function find_exact_sol(sol)
+function powersof(a,n)
+  # puts powers of a into an array (up to n)
+  A = [1]
+  for i = 1:n
+    push!(A,a^i)
+  end
+  A
+end
+
+function find_exact_sol(sol,accuracy,ppower,addrelation)
   # lindep (in Nemo)
+  # p is the prime or prime power
+  CC = CC(64) # 64-bits of accuracy
+  n = accuracy
+  one = CC.(1) # one value in CC
+  V = []
+  for a in sol
+    W = NewtonsMethod.powersof(a,accuracy)
+
+    for i in addrelation
+    push!(W,i)
+    end
+    push!(V,Nemo.lindep(W))
+  end
+  V
 end
 
 function double_check_single(g,sol,var)

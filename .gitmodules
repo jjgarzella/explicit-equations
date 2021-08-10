@@ -1,3 +1,6 @@
 [submodule "EasyPolynomialStorage"]
 	path = EasyPolynomialStorage
 	url = https://github.com/jjgarzella/EasyPolynomialStorage
+[submodule "JuliaEigenvalueSolver"]
+	path = JuliaEigenvalueSolver
+	url = https://github.com/simontelen/JuliaEigenvalueSolver

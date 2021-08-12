@@ -212,19 +212,19 @@ function powersof(a,n)
 end
 
 function find_exact_sol(sol,accuracy,ppower,addrelation)
+  # addrelation; W = [sqrt(complex(-15)),ppower]
   # lindep (in Nemo)
   # p is the prime or prime power
-  CC = CC(64) # 64-bits of accuracy
+  CC = ComplexField(128) # 64-bits of accuracy
   n = accuracy
-  one = CC.(1) # one value in CC
   V = []
   for a in sol
-    W = NewtonsMethod.powersof(a,accuracy)
-
+    U = [CC(1)]
+    push!(U,CC(real(a),imag(a)))
     for i in addrelation
-    push!(W,i)
+    push!(U,CC(real(i),imag(i)))
     end
-    push!(V,Nemo.lindep(W))
+    push!(V,Nemo.lindep(U,20))
   end
   V
 end

@@ -11,7 +11,7 @@ include("JuliaEigenvalueSolver/src/EigenvalueSolver.jl")
 function testmemory(k)
     for l = 1:k
         F = randomdense(l,l)
-        println(HCsolve(F))
+        println(@time HCsolve(F))
         println("The system of size $l has been successful.")
     end
 end
@@ -31,7 +31,7 @@ function ODsolve_dense(F,x)
 end
 
 function HCsolve(F)
-  @time HomotopyContinuation.solve(F)
+  @time HomotopyContinuation.solve(F;threading=true)
 end
 
 

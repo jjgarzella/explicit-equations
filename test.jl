@@ -6,6 +6,35 @@ using Nemo
 using Singular
 using GroebnerBasis
 
+include("JuliaEigenvalueSolver/src/EigenvalueSolver.jl")
+
+function testmemory(k)
+    for l = 1:k
+        F = randomdense(l,l)
+        println(HCsolve(F))
+        println("The system of size $l has been successful.")
+    end
+end
+
+
+function randomdense(n,m)
+  @polyvar x[1:n]
+  ds = []
+  for i = 1:m
+    push!(ds,i)
+  end
+  @time EigenvalueSolver.getRandomSystem_dense(x, ds; complex = true)
+end
+
+function ODsolve_dense(F,x)
+  @time EigenvalueSolver.solve_OD_dense(F,x)
+end
+
+function HCsolve(F)
+  @time HomotopyContinuation.solve(F)
+end
+
+
 function run()
   @polyvar x[1:3]
 

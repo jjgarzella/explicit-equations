@@ -6,15 +6,56 @@ using Nemo
 using Singular
 using GroebnerBasis
 
-function netwons_method_qp(f,p,var)
-  sol_modp = convertarraygfptofloat(solve_modwithrat(f,p,var)[1])
+"""
+@polyvar x[1:2]
+var = x
+p = 3
+f = [x[1]^3-2x[1]*x[2],x[1]^2*x[2]-2x[2]^2+x[1]]
+NewtonsMethod.newtons_method_p(f,p,var)
+
+@polyvar x[1:2]
+var = x
+p = 3
+f = [x[1]-x[2],x[2]]
+NewtonsMethod.newtons_method_p(f,p,var)
+
+@polyvar x[1:3]
+var = x
+p = 5
+f = [x[1]-x[2],x[1]^2-x[3],x[2],x[2]^2-3*x[3]]
+NewtonsMethod.newtons_method_p(f,p,var)
+
+@polyvar x[1:3]
+var = x
+p = 7
+f = [x[1]*x[3] - x[2]^2, x[2] - x[3]^2, x[1] - x[2]*x[3], x[1] + x[2] + x[3] + 1]
+NewtonsMethod.newtons_method_p(f,p,var)
+
+"""
+
+
+function newtons_method_p(f,p,var)
+  sol_modp =   NewtonsMethod.convertarraygfptoint(NewtonsMethod.solve_modwithrat(f,p,var)[1])
+  #NewtonsMethod.solve_modwithrat(f,p,var)[1]
+
   sol_mod_pn = sol_modp
-  for n in 2:200
-    sol_mod_pn = extend_mod(sol_modp,f,var,n,p)
+  #println(sol_modp)
+
+  for n in 2:10
+    sol_mod_pn = NewtonsMethod.extend_mod(sol_mod_pn,f,var,n,p)
+    #println("$n: ")
+    #println(NewtonsMethod.extend_mod(sol_mod_pn,f,var,n,p))
   end
-  final_sol = find_exact_sol(sol_mod_pn)
-  double_check(f,sol,var)
-  final_sol
+
+  final_sol = sol_mod_pn
+  exact = find_exact_sol(final_sol,[sqrt(complex(-15)),p^5])
+
+  if double_check(f,final_sol,var) == true
+    println("The final solution solves the system mod $p raised 5. The final solution
+and its exact form are respectively in the array:")
+    return [final_sol,exact]
+    print("The final solution obtained does not solve the system in mod $p raised 5.")
+  end
 end
 
 function solvegroebnerp(I,p,var)
@@ -97,38 +138,51 @@ and the program fails to solve this
 
 for a currently successful test, try f = [x[1]^3-2x[1]*x[2],x[1]^2*x[2]-2x[2]^2+x[1]]
 which gives Groebner basis (x[1]^2, x[2]^2 + 2*x[1], x[1]*x[2])
-and solution [0.0,0.0] in type Float64.
+and solution [0,0].
 """
 
 function solve_modwithrat(f,p,var)
   F = GF(p)
   variablesnew = string.(var)
   R, (indeter) = Oscar.PolynomialRing(F,variablesnew)
-  g = repeat([indeter[1]],length(f))
+
+  g = [indeter[1]]
+
+  for n in 1:length(f)-1
+    push!(g,indeter[1])
+  end
+
+  #g = repeat([indeter[1]],length(f))
+
   for i in 1:length(f)
     g[i] = f[i]((var...,) => (indeter...,))
   end
 
   I = Oscar.ideal(g)
+  #println(I)
   if !isequal(points(I),[])
     sol = points(I)
   elseif !isequal(proj_points(I),[])
     sol = proj_points(I)
   else
-    sol = print("There was an error with rational_points. Potentially, no solutions were found.")
+    sol = [zeros(Int64,length(var))]
+    println("There was an error with rational_points. Potentially, no solutions were found.")
   end
   sol
 end
 
-
 function convertgfptofloat(gfp)
+  parse(Float64,string(gfp))
+end
+
+function convertgfptoint(gfp)
   parse(Int64,string(gfp))
 end
 
-function convertarraygfptofloat(array)
+function convertarraygfptoint(array)
   newarray = zeros(Int,length(array))
   for i = 1:length(array)
-    newarray[i] =convertgfptofloat(array[i])
+    newarray[i] =convertgfptoint(array[i])
   end
   newarray
 end
@@ -180,15 +234,12 @@ end
 
 function extend_mod(sol,f,var,m,p)
   # a_{n+1} = a_n - Df(a_n)^+ * f(a_n)
-  print("Extending mod solution mod $p raised $m.
-")
+  # println("Extending mod solution mod $p raised $m.")
   for n = 1:m
     extendsol = sol - NewtonsMethod.pseudo_inv_finite_field(NewtonsMethod.jacobian_sol(f,sol,p),p)*NewtonsMethod.evaluatesystem(f,sol,var)
-    println("Extension $n:", extendsol)
+    #println("Extension $n:", extendsol)
     sol = extendsol
   end
-  # extendsol does not do its work over mod p
-  # observe in the example below that the output [-1,2,-1] is actually a Float64
   for n = 1:length(sol)
     sol[n] = mod(sol[n],p^m)
   end
@@ -211,12 +262,11 @@ function powersof(a,n)
   A
 end
 
-function find_exact_sol(sol,accuracy,ppower,addrelation)
+function find_exact_sol(sol,addrelation)
   # addrelation; W = [sqrt(complex(-15)),ppower]
   # lindep (in Nemo)
   # p is the prime or prime power
   CC = ComplexField(128) # 64-bits of accuracy
-  n = accuracy
   V = []
   for a in sol
     U = [CC(1)]
@@ -226,7 +276,18 @@ function find_exact_sol(sol,accuracy,ppower,addrelation)
     end
     push!(V,Nemo.lindep(U,20))
   end
-  V
+
+  EV=[]
+
+  for b in  V
+    esol =
+    complex(((-NewtonsMethod.convertgfptofloat(b[1]))/-NewtonsMethod.convertgfptofloat(b[2])) -
+    (-NewtonsMethod.convertgfptofloat(b[3])*sqrt(complex(-15)))/(-NewtonsMethod.convertgfptofloat(b[2])))
+
+    push!(EV,esol)
+  end
+
+  EV
 end
 
 function double_check_single(g,sol,var)

@@ -8,6 +8,25 @@ using GroebnerBasis
 
 include("JuliaEigenvalueSolver/src/EigenvalueSolver.jl")
 
+function testmemoryii(k,m)
+    for l = 1:k
+        F = randomdenseii(m,l)
+        println(F)
+        println(@time HCsolve(F))
+        println("The system of size $l has been successful.")
+    end
+end
+
+
+function randomdenseii(n,m)
+  @polyvar x[1:n]
+  ds = []
+  for i = 1:m
+    push!(ds,i+1)
+  end
+  @time EigenvalueSolver.getRandomSystem_dense(x, ds; complex = true)
+end
+
 function testmemory(k)
     for l = 1:k
         F = randomdense(l,l)

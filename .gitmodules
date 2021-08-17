@@ -4,3 +4,6 @@
 [submodule "JuliaEigenvalueSolver"]
 	path = JuliaEigenvalueSolver
 	url = https://github.com/simontelen/JuliaEigenvalueSolver
+[submodule "VMLS.jl"]
+	path = VMLS.jl
+	url = https://github.com/VMLS-book/VMLS.jl

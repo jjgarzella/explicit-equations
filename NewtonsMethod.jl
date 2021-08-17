@@ -53,8 +53,10 @@ function newtons_method_p(f,p,var)
   if double_check(f,final_sol,var) == true
     println("The final solution solves the system mod $p raised 5. The final solution
 and its exact form are respectively in the array:")
+  return [final_sol,exact]
+  else
+    println("The final solution obtained does not solve the system in mod $p raised 5.")
     return [final_sol,exact]
-    print("The final solution obtained does not solve the system in mod $p raised 5.")
   end
 end
 

@@ -47,23 +47,38 @@ point = [1,2,3]
 diffs.differentials(f,point,allvars)
 """
 
-function choose(S,point,allvars)
+function choose(S,point,i,allvars)
     vecs = []
-    A = sample(1:length(S),2,replace=false)
+    j = 1
+    A = sample(1:length(S),i,replace=false)
         for a in A
             push!(vecs,Array{Int64}(diffs.differentials(S[a],point,allvars)))
         end
     B=vecs
-    while length(VMLS.gram_schmidt(B)) !== length(B)
-        A = sample(1:length(S),2,replace=false)
+    while length(VMLS.gram_schmidt(B)) !== length(B) & j <= binomial(length(S),i)
+        A = sample(1:length(S),i,replace=false)
+        j += 1
         vecs = []
             for a in A
                 push!(vecs,Array{Int64}(diffs.differentials(S[a],point,allvars)))
             end
         B=vecs
+        if j == length(S)
+            println("All possible choices of $i equations from the system yielded linearly
+            dependent differentials at the point.")
+        end
     end
-    return A
+
+    T = []
+
+    for a in A
+        push!(T,S[a])
+    end
+
+    return T
 end
+# The Array{Int64} is needed to remove an error that arisesw with
+# the gram_schmidt algorith.
 
 """
 Example 3:
@@ -72,7 +87,7 @@ Example 3:
 allvars = x
 S = [x[1]^2+x[2]^2, x[1]^2+x[3]^2, x[2]^2+x[1]x[3], x[2]^2+x[1]x[2]x[3]]
 point = [1,4,5]
-diffs.choose(S,point,allvars)
+diffs.choose(S,point,2,allvars)
 
 Examples 4:
 
@@ -80,7 +95,7 @@ Examples 4:
 allvars = x
 S = [x[1]+x[2]^2, x[1]^2+2*x[2], x[1]^2]
 point = [1/2,1]
-diffs.choose(S,point,allvars)
+diffs.choose(S,point,3,allvars)
 """
 
 

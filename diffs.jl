@@ -6,7 +6,7 @@ using Nemo
 using Singular
 using StatsBase
 
-include("VMLS/src/VMLS.jl")
+include("VMLS.jl/src/VMLS.jl")
 
 # script to compute the differential of a polynomial at a point
 # script to checck linear independence of a set of vector
@@ -55,7 +55,7 @@ function choose(S,point,i,allvars)
             push!(vecs,Array{Int64}(diffs.differentials(S[a],point,allvars)))
         end
     B=vecs
-    while length(VMLS.gram_schmidt(B)) !== length(B) & j <= binomial(length(S),i)
+    while length(VMLS.jl.gram_schmidt(B)) !== length(B) & j <= binomial(length(S),i)
         A = sample(1:length(S),i,replace=false)
         j += 1
         vecs = []

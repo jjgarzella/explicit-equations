@@ -33,6 +33,81 @@ function setup(filename,outputfilename)
     end;
 end#function setup(filename)
 
+"""
+setup("Rels23withrrIn.txt","Rels23withrrOut.txt")
+"""
+
+
+function simplify(filename,outputfilename)
+    open(filename,"r") do io
+    open(outputfilename,"w") do jo
+    for line in eachline(io)
+        line = replace(line, ", " => "]
+A = [")
+        write(jo,line)
+    end
+    end;
+    end;
+end
+
+"""
+editrels.simplify("Rels23withrrOut.txt","Rels23Simp.txt")
+"""
+
+function reindex(filename,outputfilename)
+    open(filename,"r") do io
+    open(outputfilename,"w") do jo
+    n = 0
+    for line in eachline(io)
+        n += 1
+        line = replace(line, "A" => "
+
+A$n")
+        write(jo,line)
+    end
+    end;
+    end;
+end
+
+"""
+editrels.reindex("RelsSimp.txt","Rels23Final.txt")
+"""
+
+
+function reindex2(filename,outputfilename)
+    open(filename,"r") do io
+    open(outputfilename,"w") do jo
+    n = 0
+    for line in eachline(io)
+        n += 1
+        line = replace(line, "A" => "
+A$n")
+        write(jo,line)
+    end
+    end;
+    end;
+end
+
+
+function separatefiles(filename)
+    n = 0
+    open(filename,"r") do io
+    for line in eachline(io)
+        n += 1
+    open("separatedBFrels/RelsEq$n","w") do jo
+        write(jo,line)
+    end
+    end;
+    end;
+end
+
+"""
+editrels.reindex2("RelsSimp.txt","Rels23Final.txt")
+Edit the first entry
+editrels.separatefiles("Rels23Final.txt")
+"""
+
+
 # function setup(filename)
 #     open(filename,"r") do io
 #     open("output.txt","w") do jo
@@ -87,8 +162,5 @@ end#function setup(filename)
 # end
 
 
-function solvingsystem(F)
-    HomotopyContinuation.solve(F)
-end#function solvingsystem(F)
 
 end #module

@@ -4,8 +4,7 @@ module editrels
 # and prepare for it to be inputted into the HomotopyContinuation.jl solver
 
 using HomotopyContinuation
-
-
+using DynamicPolynomials
 
 # this sets up the file by taking in the file with equations
 # and then outputting a new file which can then be copy pasted into the
@@ -43,7 +42,9 @@ function simplify(filename,outputfilename)
     open(outputfilename,"w") do jo
     for line in eachline(io)
         line = replace(line, ", " => "]
-A = [")
+[")
+        #line = replace(line, ", " => "]
+#A = [")
         write(jo,line)
     end
     end;
@@ -60,9 +61,9 @@ function reindex(filename,outputfilename)
     n = 0
     for line in eachline(io)
         n += 1
-        line = replace(line, "A" => "
-
-A$n")
+        #line = replace(line, "A" => "
+#
+#A$n")
         write(jo,line)
     end
     end;
@@ -70,18 +71,20 @@ A$n")
 end
 
 """
-editrels.reindex("RelsSimp.txt","Rels23Final.txt")
+editrels.reindex("Rels23Simp.txt","Rels23Final.txt")
 """
 
 
 function reindex2(filename,outputfilename)
+    @polyvar c[1:20]
+    @polyvar d[1:6]
     open(filename,"r") do io
     open(outputfilename,"w") do jo
     n = 0
     for line in eachline(io)
         n += 1
-        line = replace(line, "A" => "
-A$n")
+        #line = replace(line, "A" => "
+#A$n")
         write(jo,line)
     end
     end;
@@ -102,11 +105,39 @@ function separatefiles(filename)
 end
 
 """
-editrels.reindex2("RelsSimp.txt","Rels23Final.txt")
+editrels.reindex2("Rels23Simp.txt","Rels23Final.txt")
 Edit the first entry
 editrels.separatefiles("Rels23Final.txt")
+
+function read(s::IO, ::Type{Complex{T}}) where T<:Real
+    r = read(s,T)
+    i = read(s,T)
+    Complex{T}(r,i)
+end
 """
 
+# this function will merge the equations
+# in each file together
+
+function convdynam(poly)
+    #convert(Vector{DynamicPolynomials.Polynomial{true, ComplexF64}}, poly)
+end
+
+function mergerels()
+    @polyvar c[1:20]
+    @polyvar d[1:6]
+    S = []
+    for n = 1
+        #S = open(f->read(f, Vector{Polynomial{true, ComplexF64}} ),"separatedBFrels/RelsEq$n")
+        open(f->vcat(S,eval(Meta.parse(f))),"separatedBFrels/RelsEq$n")
+    end
+    println(S)
+end
+
+"""
+editrels.mergerels()
+convert(Vector{DynamicPolynomials{true, ComplexF64}}, input)
+"""
 
 # function setup(filename)
 #     open(filename,"r") do io

@@ -7,7 +7,7 @@ using DynamicPolynomials
 @polyvar d[1:6]
 
 function setup()
-    S = Polynomial{true, ComplexF32}[]
+    S = Polynomial{true, ComplexF64}[]
     for n = 1:67
         S = vcat(S,convert(Vector{Polynomial{true,ComplexF64}},eval(Meta.parse(readline("separatedBFrels/RelsEq$n")))))
     end

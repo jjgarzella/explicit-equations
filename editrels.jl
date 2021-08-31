@@ -36,13 +36,40 @@ end#function setup(filename)
 setup("Rels23withrrIn.txt","Rels23withrrOut.txt")
 """
 
+function setupmod(filename,outputfilename)
+    open(filename,"r") do io
+    open(outputfilename,"w") do jo
+        for line in eachline(io)
+            line = replace(line, "{" => "[")
+            line = replace(line, "}" => "]")
+            for i =1:6
+                line = replace(line, "d$i" => "d[$i]")
+            end
+            for j=10:19
+                line = replace(line, "c$j" =>"c[$(j+1)]")
+            end
+            # Need to do these replacements first otherwise it messes things up
+            for j=0:9
+                line = replace(line, "c$j" =>"c[$(j+1)]")
+            end
+            line = replace(line, "rr" => "2")
+            write(jo,line)
+        end
+    end;
+    end;
+end#function setup(filename)
+
+"""
+editrels.setupmod("Rels23withrrIn.txt","Rels23withrrOut.txt")
+"""
+
 
 function simplify(filename,outputfilename)
     open(filename,"r") do io
     open(outputfilename,"w") do jo
     for line in eachline(io)
         line = replace(line, ", " => "]
-[")
+["
         #line = replace(line, ", " => "]
 #A = [")
         write(jo,line)
@@ -61,9 +88,7 @@ function reindex(filename,outputfilename)
     n = 0
     for line in eachline(io)
         n += 1
-        #line = replace(line, "A" => "
-#
-#A$n")
+        line = replace(line, "A" => "A$n")
         write(jo,line)
     end
     end;
@@ -103,6 +128,19 @@ function separatefiles(filename)
     end;
     end;
 end
+
+function separatefilesmod(filename)
+    n = 0
+    open(filename,"r") do io
+    for line in eachline(io)
+        n += 1
+    open("separatedBFrels/RelsEqMod$n","w") do jo
+        write(jo,line)
+    end
+    end;
+    end;
+end
+
 
 """
 editrels.reindex2("Rels23Simp.txt","Rels23Final.txt")

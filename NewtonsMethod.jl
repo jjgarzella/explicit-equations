@@ -5,12 +5,43 @@ using Oscar
 using Nemo
 using Singular
 using GroebnerBasis
+using DynamicPolynomials
+
+@polyvar c[1:20]
+@polyvar d[1:6]
+
+vars = vcat(c,d)
+
+function setupandrun(p)
+    #S = DynamicPolynomials.Polynomial{true, ComplexF64}[]
+    #for n = 1:67
+    #    S = vcat(S,convert(Vector{DynamicPolynomials.Polynomial{true,ComplexF64}},eval(Meta.parse(readline("separatedBFrels/RelsEqMod$n")))))
+    #end
+    #S
+
+    S = DynamicPolynomials.Polynomial{true, BigInt}[]
+    for n = 1:67
+        S = vcat(S,convert(Vector{DynamicPolynomials.Polynomial{true,BigInt}},eval(Meta.parse(readline("separatedBFrels/RelsEqMod$n")))))
+    end
+    S
+
+    #Int128 gives inexact error
+
+    #S = Nemo.gfp_mpoly[]
+    #for n = 1:67
+    #    S = vcat(S,convert(Vector{Nemo.gfp_mpoly},eval(Meta.parse(readline("separatedBFrels/RelsEqMod$n")))))
+    #end
+    #S
+
+    newtons_method_p(S,p,vars)
+end
+
 
 """
 @polyvar x[1:2]
 var = x
 p = 3
-f = [x[1]^3-2x[1]*x[2],x[1]^2*x[2]-2x[2]^2+x[1]]
+f = DynamicPolynomials.Polynomial{true,ComplexF64}[223*x[1]^3-2x[1]*x[2],x[1]^2*x[2]-2x[2]^2+x[1]]
 NewtonsMethod.newtons_method_p(f,p,var)
 
 @polyvar x[1:2]
@@ -155,7 +186,8 @@ function solve_modwithrat(f,p,var)
   end
 
   #g = repeat([indeter[1]],length(f))
-
+  #println(g)
+  #println(f)
   for i in 1:length(f)
     g[i] = f[i]((var...,) => (indeter...,))
   end

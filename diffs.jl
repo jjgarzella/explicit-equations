@@ -160,7 +160,10 @@ To run on Borisov System, we will need to do the following.
 
 set up the equations
 input the point we are extending
+point = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 then write in diffs.choosemetic(S,point,16,32,allvars)
+diffs.choosemetic(S,point,16,32,vcat[c,d])
+
 """
 
 

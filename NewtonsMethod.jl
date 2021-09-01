@@ -68,19 +68,17 @@ NewtonsMethod.newtons_method_p(f,p,var)
 function newtons_method_p(f,p,var)
   sol_modp =   NewtonsMethod.convertarraygfptoint(NewtonsMethod.solve_modwithrat(f,p,var)[1])
   #NewtonsMethod.solve_modwithrat(f,p,var)[1]
-
   sol_mod_pn = sol_modp
-  #println(sol_modp)
-
-  for n in 2:10
+  println(sol_modp)
+  for n in 2:200
     sol_mod_pn = NewtonsMethod.extend_mod(sol_mod_pn,f,var,n,p)
     #println("$n: ")
     #println(NewtonsMethod.extend_mod(sol_mod_pn,f,var,n,p))
+    println(sol_mod_pn)
   end
-
   final_sol = sol_mod_pn
-  exact = find_exact_sol(final_sol,[sqrt(complex(-15)),p^5])
-
+  exact = find_exact_sol(final_sol,[sqrt(complex(-15)),p^200])
+  println(exact)
   if double_check(f,final_sol,var) == true
     println("The final solution solves the system mod $p raised 5. The final solution
 and its exact form are respectively in the array:")

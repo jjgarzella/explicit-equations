@@ -12,6 +12,20 @@ using DynamicPolynomials
 
 vars = vcat(c,d)
 
+function inputBF()
+  S = DynamicPolynomials.Polynomial{true, BigInt}[]
+  for n = 1:67
+      S = vcat(S,convert(Vector{DynamicPolynomials.Polynomial{true,BigInt}},eval(Meta.parse(readline("separatedBFrels/RelsEqMod$n")))))
+  end
+  S
+  println(S)
+end
+
+function run(p)
+  S = inputBF()
+  newtons_method_p(S,p,vars)
+end
+
 function setupandrun(p)
     #S = DynamicPolynomials.Polynomial{true, ComplexF64}[]
     #for n = 1:67
@@ -24,7 +38,7 @@ function setupandrun(p)
         S = vcat(S,convert(Vector{DynamicPolynomials.Polynomial{true,BigInt}},eval(Meta.parse(readline("separatedBFrels/RelsEqMod$n")))))
     end
     S
-
+    println(S)
     #Int128 gives inexact error
 
     #S = Nemo.gfp_mpoly[]

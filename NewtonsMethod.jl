@@ -18,7 +18,6 @@ function inputBF()
       S = vcat(S,convert(Vector{DynamicPolynomials.Polynomial{true,BigInt}},eval(Meta.parse(readline("separatedBFrels/RelsEqMod$n")))))
   end
   S
-  println(S)
 end
 
 function run(p)

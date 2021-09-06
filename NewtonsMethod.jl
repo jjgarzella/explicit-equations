@@ -20,10 +20,15 @@ function inputBF()
   S
 end
 
-function run(p)
-  S = inputBF()
+function run(S,p)
+  @polyvar c[1:20]
+  @polyvar d[1:6]
+  vars = vcat(c,d)
+
   newtons_method_p(S,p,vars)
 end
+
+#please run this one for the computations
 
 function setupandrun(p)
     #S = DynamicPolynomials.Polynomial{true, ComplexF64}[]
@@ -36,15 +41,13 @@ function setupandrun(p)
     for n = 1:67
         S = vcat(S,convert(Vector{DynamicPolynomials.Polynomial{true,BigInt}},eval(Meta.parse(readline("separatedBFrels/RelsEqMod$n")))))
     end
-    S
-    println(S)
     #Int128 gives inexact error
-
     #S = Nemo.gfp_mpoly[]
     #for n = 1:67
     #    S = vcat(S,convert(Vector{Nemo.gfp_mpoly},eval(Meta.parse(readline("separatedBFrels/RelsEqMod$n")))))
     #end
     #S
+    println(S)
 
     newtons_method_p(S,p,vars)
 end
@@ -61,6 +64,14 @@ NewtonsMethod.newtons_method_p(f,p,var)
 var = x
 p = 3
 f = [x[1]-x[2],x[2]]
+NewtonsMethod.newtons_method_p(f,p,var)
+
+
+@polyvar x[1:2]
+@polyvar y[1:2]
+var = vcat(x,y)
+p = 3
+f = [x[1]-x[2],x[2]-y[1]+x[1]+y[2],y[2]+y[1]-x[1]+x[2],x[1]^2+y[1]-y[2]+x[2],x[2]+y[2]-y[2]]
 NewtonsMethod.newtons_method_p(f,p,var)
 
 @polyvar x[1:3]
@@ -93,7 +104,7 @@ function newtons_method_p(f,p,var)
   exact = find_exact_sol(final_sol,[sqrt(complex(-15)),p^200])
   println(exact)
   if double_check(f,final_sol,var) == true
-    println("The final solution solves the system mod $p raised 5. The final solution
+    println("The final solution solves the system mod $p raised 200. The final solution
 and its exact form are respectively in the array:")
   return [final_sol,exact]
   else
@@ -189,18 +200,20 @@ function solve_modwithrat(f,p,var)
   F = GF(p)
   variablesnew = string.(var)
   R, (indeter) = Oscar.PolynomialRing(F,variablesnew)
-
+  println(indeter)
   g = [indeter[1]]
 
   for n in 1:length(f)-1
     push!(g,indeter[1])
   end
-
+  #println(g)
   #g = repeat([indeter[1]],length(f))
   #println(g)
   #println(f)
   for i in 1:length(f)
     g[i] = f[i]((var...,) => (indeter...,))
+    # g[i] = HomotopyContinuation.evaluate(f[i], vars => indeter)
+    println(g[i])
   end
 
   I = Oscar.ideal(g)

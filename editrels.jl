@@ -1,5 +1,5 @@
 module editrels
-# this was written to parse through the file Rels23withrr
+# this was written to parse through the file separatedBFrels/Rels23withrr
 # from the paper New Explicit Constructions of Surfaces of General Type
 # and prepare for it to be inputted into the HomotopyContinuation.jl solver
 
@@ -33,7 +33,7 @@ function setup(filename,outputfilename)
 end#function setup(filename)
 
 """
-setup("Rels23withrrIn.txt","Rels23withrrOut.txt")
+setup("separatedBFrels/Rels23withrrIn.txt","separatedBFrels/Rels23withrrOut.txt")
 """
 
 function setupmod(filename,outputfilename)
@@ -60,7 +60,7 @@ function setupmod(filename,outputfilename)
 end#function setup(filename)
 
 """
-editrels.setupmod("Rels23withrrIn.txt","Rels23withrrOut.txt")
+editrels.setupmod("separatedBFrels/Rels23withrrIn.txt","separatedBFrels/Rels23withrrOut.txt")
 """
 
 
@@ -79,7 +79,7 @@ function simplify(filename,outputfilename)
 end
 
 """
-editrels.simplify("Rels23withrrOut.txt","Rels23Simp.txt")
+editrels.simplify("separatedBFrels/Rels23withrrOut.txt","separatedBFrels/Rels23Simp.txt")
 """
 
 function reindex(filename,outputfilename)
@@ -96,7 +96,7 @@ function reindex(filename,outputfilename)
 end
 
 """
-editrels.reindex("Rels23Simp.txt","Rels23Final.txt")
+editrels.reindex("separatedBFrels/Rels23Simp.txt","separatedBFrels/Rels23Final.txt")
 """
 
 
@@ -143,9 +143,9 @@ end
 
 
 """
-editrels.reindex2("Rels23Simp.txt","Rels23Final.txt")
+editrels.reindex2("separatedBFrels/Rels23Simp.txt","separatedBFrels/Rels23Final.txt")
 Edit the first entry
-editrels.separatefiles("Rels23Final.txt")
+editrels.separatefiles("separatedBFrels/Rels23Final.txt")
 
 function read(s::IO, ::Type{Complex{T}}) where T<:Real
     r = read(s,T)
